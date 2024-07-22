@@ -12,9 +12,10 @@ filesets:
       - or1k_marocchino
   soc_files:
     files:
-      - rtl/verilog/wb_intercon.vh: {is_include_file: true}
+      - "!small_mem ? (rtl/verilog/wb_intercon.vh) small_mem ? (rtl/verilog/small_mem/wb_intercon.vh)": {is_include_file: true}
       - rtl/verilog/orpsoc_top.v
-      - rtl/verilog/wb_intercon.v
+      - "!small_mem ? (rtl/verilog/wb_intercon.v) small_mem ? (rtl/verilog/small_mem/wb_intercon.v)"
+      - "small_mem ? (rtl/verilog/small_mem/or1k_procedural_exception_vector_mem.v)"
     file_type: verilogSource
     depend:
       - intgen
@@ -48,10 +49,10 @@ targets:
       - "tool_verilator ? (verilator_tb_files)"
     parameters: [clear_ram, pipeline, feature_immu, feature_dmmu, feature_fpu,
                   feature_instructioncache, feature_datacache, feature_debugunit,
-                  feature_cmov, feature_ext, feature_fastcontexts, option_rf_num_shadow_gpr]
+                  feature_cmov, feature_ext, feature_fastcontexts, option_rf_num_shadow_gpr, MEM_SIZE]
     tools:
       icarus:
-        iverilog_options: [-DICARUS_SIM, -DSIM, -DSPEEDSIM]
+        iverilog_options: [-DICARUS_SIM, -DSIM, -DSPEEDSIM, "small_mem ? (-DSMALL_MEM)"]
       modelsim:
         vlog_options: [+define+SIM, +define+MODELSIM_SIM, -timescale 1ns/1ps]
         vsim_options: [-L, altera_mf_ver, -L, altera_mf]
@@ -77,10 +78,10 @@ targets:
       - "!tool_verilator ? (verilog_tb_files)"
       - "tool_verilator ? (verilator_tb_files)"
     parameters: [clear_ram, pipeline=MAROCCHINO, feature_debugunit, feature_fpu,
-                 option_rf_num_shadow_gpr]
+                 option_rf_num_shadow_gpr, MEM_SIZE]
     tools:
       icarus:
-        iverilog_options: [-DICARUS_SIM, -DSIM, -DSPEEDSIM]
+        iverilog_options: [-DICARUS_SIM, -DSIM, -DSPEEDSIM, "small_mem ? (-DSMALL_MEM)"]
       modelsim:
         vlog_options: [+define+SIM, +define+MODELSIM_SIM, -timescale 1ns/1ps]
         vsim_options: [-L, altera_mf_ver, -L, altera_mf]
@@ -167,3 +168,10 @@ parameters:
     description: Specify number of shadow gprs, use 0-32
     paramtype  : vlogparam
     scope      : private
+
+  MEM_SIZE:
+    datatype   : int
+    description: Size of memory
+    paramtype  : vlogparam
+    scope      : private
+    default    : "!small_mem ? (0x02000000) small_mem ? (0xe000)"

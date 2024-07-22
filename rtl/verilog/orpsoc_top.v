@@ -325,13 +325,19 @@ endgenerate
 // Generic main RAM
 //
 ////////////////////////////////////////////////////////////////////////
+   wire [31:0] wb_mem_adr;
+`ifdef SMALL_MEM
+   assign wb_mem_adr = wb_m2s_mem_adr - 32'h00002000;
+`else
+   assign wb_mem_adr = wb_m2s_mem_adr;
+`endif
 wb_ram #(
 	.depth	(MEM_SIZE)
 ) wb_bfm_memory0 (
 	//Wishbone Master interface
 	.wb_clk_i	(wb_clk_i),
 	.wb_rst_i	(wb_rst_i),
-	.wb_adr_i	(wb_m2s_mem_adr[$clog2(MEM_SIZE)-1:0]),
+	.wb_adr_i	(wb_mem_adr[$clog2(MEM_SIZE)-1:0]),
 	.wb_dat_i	(wb_m2s_mem_dat),
 	.wb_sel_i	(wb_m2s_mem_sel),
 	.wb_we_i	(wb_m2s_mem_we),
@@ -396,6 +402,27 @@ intgen intgen0 (
 
    assign wb_s2m_intgen_err = 1'b0;
    assign wb_s2m_intgen_rty = 1'b0;
+
+////////////////////////////////////////////////////////////////////////
+//
+// Procedural exception vector memory
+//
+////////////////////////////////////////////////////////////////////////
+`ifdef SMALL_MEM
+or1k_procedural_exception_vector_mem vector0 (
+	//Wishbone Master interface
+	.clk_i		(wb_clk_i),
+	.rst_i		(wb_rst_i),
+	.wb_adr_i       (wb_m2s_vectors_adr[12:0]),
+	.wb_cyc_i       (wb_m2s_vectors_cyc),
+	.wb_stb_i       (wb_m2s_vectors_stb),
+        .wb_dat_o       (wb_s2m_vectors_dat),
+	.wb_ack_o       (wb_s2m_vectors_ack)
+);
+
+   assign wb_s2m_vectors_err = 1'b0;
+   assign wb_s2m_vectors_rty = 1'b0;
+`endif
 
 ////////////////////////////////////////////////////////////////////////
 //

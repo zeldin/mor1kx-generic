@@ -1,5 +1,6 @@
 module orpsoc_tb
-  #(parameter pipeline = "CAPPUCCINO",
+  #(parameter MEM_SIZE = 32'h02000000, //Set default memory size to 32MB
+    parameter pipeline = "CAPPUCCINO",
     parameter feature_immu = "ENABLED",
     parameter feature_dmmu = "ENABLED",
     parameter feature_instructioncache = "ENABLED",
@@ -11,8 +12,6 @@ module orpsoc_tb
     parameter feature_fastcontexts = "NONE",
     parameter option_rf_num_shadow_gpr = 0
    );
-
-   localparam MEM_SIZE = 32'h02000000; //Set default memory size to 32MB
 
    vlog_tb_utils vlog_tb_utils0();
 
@@ -48,6 +47,7 @@ module orpsoc_tb
    integer mem_words;
    integer i;
    reg [31:0] mem_word;
+   reg [31:0] base;
    reg [1023:0] elf_file;
 
    initial begin
@@ -60,10 +60,15 @@ module orpsoc_tb
       if($value$plusargs("elf_load=%s", elf_file)) begin
 	 $elf_load_file(elf_file);
 
-	 mem_words = $elf_get_size/4;
+`ifdef SMALL_MEM
+	 base = 32'h00002000;
+`else
+	 base = 32'h00000000;
+`endif
+	 mem_words = ($elf_get_size-base)/4;
 	 $display("Loading %d words", mem_words);
 	 for(i=0; i < mem_words; i = i+1)
-	   orpsoc_tb.dut.wb_bfm_memory0.ram0.mem[i] = $elf_read_32(i*4);
+	   orpsoc_tb.dut.wb_bfm_memory0.ram0.mem[i] = $elf_read_32(i*4 + base);
       end else
 	$display("No ELF file specified");
 

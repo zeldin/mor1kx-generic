@@ -17,6 +17,7 @@ pushd $FILES_ROOT
   chmod 755 wb_intercon_gen
 
   ./wb_intercon_gen ./data/wb_intercon.conf ./rtl/verilog/wb_intercon.v
+  ./wb_intercon_gen ./data/wb_intercon_small_mem.conf ./rtl/verilog/small_mem/wb_intercon.v
 
   rm wb_intercon_gen verilogwriter.py verilogwriter.pyc
 popd

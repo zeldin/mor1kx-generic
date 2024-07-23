@@ -48,7 +48,7 @@ targets:
       - "tool_verilator ? (verilator_tb_files)"
     parameters: [clear_ram, pipeline, feature_immu, feature_dmmu, feature_fpu,
                   feature_instructioncache, feature_datacache, feature_debugunit,
-                  feature_cmov, feature_ext, option_rf_num_shadow_gpr]
+                  feature_cmov, feature_ext, feature_fastcontexts, option_rf_num_shadow_gpr]
     tools:
       icarus:
         iverilog_options: [-DICARUS_SIM, -DSIM, -DSPEEDSIM]
@@ -153,6 +153,12 @@ parameters:
   feature_fpu:
     datatype   : str
     description: Enable support for the 32-bit FPU, use ENABLED, NONE
+    paramtype  : vlogparam
+    scope      : private
+
+  feature_fastcontexts:
+    datatype   : str
+    description: Enable fast context switching of register sets, use ENABLED, NONE
     paramtype  : vlogparam
     scope      : private
 

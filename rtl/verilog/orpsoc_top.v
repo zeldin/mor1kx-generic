@@ -9,6 +9,7 @@ module orpsoc_top
     parameter feature_cmov = "ENABLED",
     parameter feature_ext = "ENABLED",
     parameter feature_fpu = "ENABLED",
+    parameter feature_fastcontexts = "NONE",
     parameter option_rf_num_shadow_gpr = 0
    )
 (
@@ -265,6 +266,7 @@ mor1kx #(
 	.OPTION_DCACHE_WAYS		(2),
 	.OPTION_DCACHE_LIMIT_WIDTH	(31),
 	.FEATURE_DMMU			(feature_dmmu),
+	.FEATURE_FASTCONTEXTS		(feature_fastcontexts),
 	.OPTION_RF_NUM_SHADOW_GPR	(option_rf_num_shadow_gpr),
 	.IBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),
 	.DBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),

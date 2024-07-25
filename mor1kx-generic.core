@@ -49,7 +49,7 @@ targets:
       - "tool_verilator ? (verilator_tb_files)"
     parameters: [clear_ram, pipeline, feature_immu, feature_dmmu, feature_fpu,
                   feature_instructioncache, feature_datacache, feature_debugunit,
-                  feature_cmov, feature_ext, feature_fastcontexts, option_rf_num_shadow_gpr, MEM_SIZE]
+                  feature_cmov, feature_ext, feature_ror, feature_fastcontexts, option_rf_num_shadow_gpr, MEM_SIZE]
     tools:
       icarus:
         iverilog_options: [-DICARUS_SIM, -DSIM, -DSPEEDSIM, "small_mem ? (-DSMALL_MEM)"]
@@ -148,6 +148,12 @@ parameters:
   feature_ext:
     datatype   : str
     description: Enable sign extension instructions, use ENABLED, NONE
+    paramtype  : vlogparam
+    scope      : private
+
+  feature_ror:
+    datatype   : str
+    description: Enable rotate right instructions, use ENABLED, NONE
     paramtype  : vlogparam
     scope      : private
 

@@ -8,6 +8,7 @@ module orpsoc_tb
     parameter feature_debugunit = "ENABLED",
     parameter feature_cmov = "ENABLED",
     parameter feature_ext = "ENABLED",
+    parameter feature_ror = "ENABLED",
     parameter feature_fpu = "ENABLED",
     parameter feature_fastcontexts = "NONE",
     parameter option_rf_num_shadow_gpr = 0

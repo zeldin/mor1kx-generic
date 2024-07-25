@@ -8,6 +8,7 @@ module orpsoc_top
     parameter feature_debugunit = "ENABLED",
     parameter feature_cmov = "ENABLED",
     parameter feature_ext = "ENABLED",
+    parameter feature_ror = "ENABLED",
     parameter feature_fpu = "ENABLED",
     parameter feature_fastcontexts = "NONE",
     parameter option_rf_num_shadow_gpr = 0
@@ -253,6 +254,7 @@ mor1kx #(
 	.FEATURE_DEBUGUNIT		(feature_debugunit),
 	.FEATURE_CMOV			(feature_cmov),
 	.FEATURE_EXT			(feature_ext),
+	.FEATURE_ROR                    (feature_ror),
 	.FEATURE_FPU			(feature_fpu),
 	.FEATURE_INSTRUCTIONCACHE	(feature_instructioncache),
 	.OPTION_ICACHE_BLOCK_WIDTH	(5),
